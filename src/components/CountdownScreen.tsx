@@ -17,6 +17,11 @@ interface Props {
 // count as a gap — only a real break shows "Next: Free block".
 const GAP_EPSILON_MS = 60_000;
 
+// Fluid size (not a fixed text-6xl) so a long countdown like "1h 24m 03s"
+// never overflows or wraps awkwardly on narrow phones, while still reaching
+// the full display size on larger screens.
+const COUNTDOWN_TEXT_CLASS = "text-[clamp(2.25rem,12vw,3.75rem)] font-semibold";
+
 function CurrentBlock({ event, now, colorIndex }: { event: StatusedEvent; now: Date; colorIndex: number }) {
   const remaining = event.end.getTime() - now.getTime();
   const color = seriesVar(colorIndex);
@@ -29,7 +34,7 @@ function CurrentBlock({ event, now, colorIndex }: { event: StatusedEvent; now: D
         {event.title}
       </p>
       <p
-        className="mt-3 text-6xl font-semibold"
+        className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
         style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}
       >
         {formatCountdown(remaining)}
@@ -58,7 +63,7 @@ function FreeBlock({
       {next ? (
         <>
           <p
-            className="mt-3 text-6xl font-semibold"
+            className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
             style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}
           >
             {formatCountdown(freeBlock.end.getTime() - now.getTime())}

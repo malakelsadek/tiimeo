@@ -46,6 +46,11 @@ body {
   height: 100%;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   background: var(--surface-0);
   color: var(--text-primary);
@@ -55,9 +60,13 @@ body {
     "Segoe UI",
     sans-serif;
   font-variant-numeric: proportional-nums;
+  /* Keep pull-to-refresh / rubber-band bounce from escaping the app shell
+     on mobile browsers, without blocking legitimate internal scrolling. */
+  overscroll-behavior-y: contain;
 }
 
 button {
   font: inherit;
   color: inherit;
+  touch-action: manipulation;
 }

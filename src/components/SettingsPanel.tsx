@@ -29,7 +29,7 @@ function Pill({
   return (
     <button
       onClick={onClick}
-      className="rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors"
+      className="rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
       style={{
         background: active ? "var(--accent)" : "var(--surface-1)",
         color: active ? "#000000" : "var(--text-secondary)",
@@ -73,12 +73,12 @@ export default function SettingsPanel({ settings, onChange, onClose }: Props) {
   };
 
   return (
-    <div className="flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10 px-6 text-center">
+    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10 overflow-y-auto px-6 py-16 text-center">
       <button
         onClick={onClose}
         aria-label="Close settings"
-        className="absolute right-4 top-4 rounded-full p-2"
-        style={{ color: "var(--text-muted)" }}
+        className="absolute right-2 rounded-full p-3"
+        style={{ color: "var(--text-muted)", top: "calc(env(safe-area-inset-top, 0px) + 0.5rem)" }}
       >
         <CloseIcon />
       </button>

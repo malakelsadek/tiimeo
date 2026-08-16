@@ -61,11 +61,14 @@ export default function AppShell() {
 
   return (
     <div className="relative flex min-h-dvh flex-1 flex-col">
-      <div className="absolute right-4 top-4 flex items-center gap-1">
+      <div
+        className="absolute right-2 flex items-center gap-1"
+        style={{ top: "calc(env(safe-area-inset-top, 0px) + 0.5rem)" }}
+      >
         <button
           onClick={() => refresh()}
           aria-label="Refresh"
-          className="rounded-full p-2"
+          className="rounded-full p-3"
           style={{ color: "var(--text-muted)" }}
         >
           <RefreshIcon className={loading ? "animate-spin" : undefined} />
@@ -73,14 +76,14 @@ export default function AppShell() {
         <button
           onClick={() => setShowSettings(true)}
           aria-label="Settings"
-          className="rounded-full p-2"
+          className="rounded-full p-3"
           style={{ color: "var(--text-muted)" }}
         >
           <GearIcon />
         </button>
       </div>
 
-      <main className="flex flex-1 flex-col items-center justify-center px-6">
+      <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-16">
         {syncError ? (
           <p className="mb-6 text-xs" style={{ color: "var(--series-8)" }}>
             {syncError}
@@ -97,8 +100,8 @@ export default function AppShell() {
 
       <button
         onClick={signOut}
-        className="pb-6 pt-2 text-center text-xs"
-        style={{ color: "var(--text-muted)" }}
+        className="shrink-0 pt-2 text-center text-xs"
+        style={{ color: "var(--text-muted)", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1.5rem)" }}
       >
         Sign out
       </button>
