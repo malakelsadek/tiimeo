@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "deny": [
+      "Edit(node_modules/**)",
+      "Read(.next/**)",
+      "Edit(.next/**)",
+      "Read(out/**)",
+      "Edit(out/**)",
+      "Read(build/**)",
+      "Edit(build/**)",
+      "Read(.vercel/**)",
+      "Edit(.vercel/**)",
+      "Read(**/*.tsbuildinfo)",
+      "Edit(**/*.tsbuildinfo)",
+      "Read(.env)",
+      "Edit(.env)",
+      "Read(.env.local)",
+      "Edit(.env.local)",
+      "Read(.env.production)",
+      "Edit(.env.production)",
+      "Read(.env.production.local)",
+      "Edit(.env.production.local)",
+      "Read(.env.development.local)",
+      "Edit(.env.development.local)",
+      "Read(.env.test.local)",
+      "Edit(.env.test.local)"
+    ]
+  },
+  "sandbox": {
+    "filesystem": {
+      "denyRead": [
+        ".next/**",
+        "out/**",
+        "build/**",
+        ".vercel/**",
+        "**/*.tsbuildinfo",
+        ".env",
+        ".env.local",
+        ".env.production",
+        ".env.production.local",
+        ".env.development.local",
+        ".env.test.local"
+      ],
+      "denyWrite": [
+        "node_modules/**",
+        ".next/**",
+        "out/**",
+        "build/**",
+        ".vercel/**"
+      ]
+    }
+  }
+}
