@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { Orbitron, VT323 } from "next/font/google";
 import "./globals.css";
+
+const orbitron = Orbitron({ variable: "--font-orbitron", subsets: ["latin"], weight: ["500", "700"] });
+const vt323 = VT323({ variable: "--font-vt323", subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
   title: "tiimeo",
@@ -22,7 +26,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className={`h-full antialiased ${orbitron.variable} ${vt323.variable}`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

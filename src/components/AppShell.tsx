@@ -9,6 +9,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useEventAlerts } from "@/hooks/useEventAlerts";
 import { deriveSchedule } from "@/lib/schedule";
+import { FONT_FAMILIES } from "@/lib/fonts";
 import SignInScreen from "./SignInScreen";
 import CountdownScreen from "./CountdownScreen";
 import SettingsPanel from "./SettingsPanel";
@@ -54,7 +55,12 @@ export default function AppShell() {
   if (showSettings) {
     return (
       <div className="relative flex min-h-dvh flex-1 flex-col">
-        <SettingsPanel settings={settings} onChange={updateSettings} onClose={() => setShowSettings(false)} />
+        <SettingsPanel
+          settings={settings}
+          onChange={updateSettings}
+          onClose={() => setShowSettings(false)}
+          onSignOut={signOut}
+        />
       </div>
     );
   }
@@ -83,7 +89,13 @@ export default function AppShell() {
         </button>
       </div>
 
-      <main className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-16">
+      <main
+        className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-6"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 4rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 4rem)",
+        }}
+      >
         {syncError ? (
           <p className="mb-6 text-xs" style={{ color: "var(--series-8)" }}>
             {syncError}
@@ -95,16 +107,9 @@ export default function AppShell() {
           freeBlock={schedule.freeBlock}
           now={now}
           colorIndexFor={colorIndexFor}
+          countdownFont={FONT_FAMILIES[settings.font]}
         />
       </main>
-
-      <button
-        onClick={signOut}
-        className="shrink-0 pt-2 text-center text-xs"
-        style={{ color: "var(--text-muted)", paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1.5rem)" }}
-      >
-        Sign out
-      </button>
     </div>
   );
 }

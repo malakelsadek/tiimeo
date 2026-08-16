@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import {
+  FONT_OPTIONS,
   LEAD_MINUTE_OPTIONS,
   SOUND_OPTIONS,
   THEME_OPTIONS,
   type Settings,
 } from "@/lib/settings";
+import { FONT_FAMILIES } from "@/lib/fonts";
 import { requestAlertPermission } from "@/lib/notifications";
 import { playAlertSound, primeAudio } from "@/lib/sound";
 import { CloseIcon } from "./icons";
@@ -15,16 +17,19 @@ interface Props {
   settings: Settings;
   onChange: (patch: Partial<Settings>) => void;
   onClose: () => void;
+  onSignOut: () => void;
 }
 
 function Pill({
   active,
   onClick,
   children,
+  fontFamily,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  fontFamily?: string;
 }) {
   return (
     <button
@@ -33,6 +38,7 @@ function Pill({
       style={{
         background: active ? "var(--accent)" : "var(--surface-1)",
         color: active ? "#000000" : "var(--text-secondary)",
+        fontFamily,
       }}
     >
       {children}
@@ -51,7 +57,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
-export default function SettingsPanel({ settings, onChange, onClose }: Props) {
+export default function SettingsPanel({ settings, onChange, onClose, onSignOut }: Props) {
   const [permissionNote, setPermissionNote] = useState<string | null>(null);
 
   const handleToggleAlerts = async () => {
@@ -73,7 +79,7 @@ export default function SettingsPanel({ settings, onChange, onClose }: Props) {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-10 overflow-y-auto px-6 py-16 text-center">
+    <div className="mx-auto flex w-full max-w-sm flex-1 flex-col items-center justify-center gap-7 overflow-y-auto px-6 py-12 text-center">
       <button
         onClick={onClose}
         aria-label="Close settings"
@@ -135,6 +141,25 @@ export default function SettingsPanel({ settings, onChange, onClose }: Props) {
           ))}
         </div>
       </Section>
+
+      <Section label="Font">
+        <div className="flex flex-wrap justify-center gap-2">
+          {FONT_OPTIONS.map((f) => (
+            <Pill
+              key={f.value}
+              active={settings.font === f.value}
+              onClick={() => onChange({ font: f.value })}
+              fontFamily={FONT_FAMILIES[f.value]}
+            >
+              {f.label}
+            </Pill>
+          ))}
+        </div>
+      </Section>
+
+      <button onClick={onSignOut} className="text-xs" style={{ color: "var(--text-muted)" }}>
+        Sign out
+      </button>
     </div>
   );
 }

@@ -11,6 +11,7 @@ interface Props {
   freeBlock: FreeBlock | null;
   now: Date;
   colorIndexFor: (calendarId: string) => number;
+  countdownFont: string;
 }
 
 // Back-to-back events (next starts right as the current one ends) don't
@@ -22,7 +23,17 @@ const GAP_EPSILON_MS = 60_000;
 // the full display size on larger screens.
 const COUNTDOWN_TEXT_CLASS = "text-[clamp(2.25rem,12vw,3.75rem)] font-semibold";
 
-function CurrentBlock({ event, now, colorIndex }: { event: StatusedEvent; now: Date; colorIndex: number }) {
+function CurrentBlock({
+  event,
+  now,
+  colorIndex,
+  countdownFont,
+}: {
+  event: StatusedEvent;
+  now: Date;
+  colorIndex: number;
+  countdownFont: string;
+}) {
   const remaining = event.end.getTime() - now.getTime();
   const color = seriesVar(colorIndex);
   return (
@@ -35,7 +46,7 @@ function CurrentBlock({ event, now, colorIndex }: { event: StatusedEvent; now: D
       </p>
       <p
         className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
-        style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}
+        style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
       >
         {formatCountdown(remaining)}
       </p>
@@ -50,10 +61,12 @@ function FreeBlock({
   freeBlock,
   next,
   now,
+  countdownFont,
 }: {
   freeBlock: FreeBlock;
   next: StatusedEvent | null;
   now: Date;
+  countdownFont: string;
 }) {
   return (
     <div>
@@ -64,7 +77,7 @@ function FreeBlock({
         <>
           <p
             className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
-            style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums" }}
+            style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
           >
             {formatCountdown(freeBlock.end.getTime() - now.getTime())}
           </p>
@@ -125,7 +138,7 @@ function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
   );
 }
 
-export default function CountdownScreen({ current, next, freeBlock, now, colorIndexFor }: Props) {
+export default function CountdownScreen({ current, next, freeBlock, now, colorIndexFor, countdownFont }: Props) {
   if (current.length === 0 && !next) {
     return (
       <p className="text-lg" style={{ color: "var(--text-muted)" }}>
@@ -160,11 +173,17 @@ export default function CountdownScreen({ current, next, freeBlock, now, colorIn
       {current.length > 0 ? (
         <div className="flex flex-col gap-8">
           {current.map((e) => (
-            <CurrentBlock key={e.id} event={e} now={now} colorIndex={colorIndexFor(e.calendarId)} />
+            <CurrentBlock
+              key={e.id}
+              event={e}
+              now={now}
+              colorIndex={colorIndexFor(e.calendarId)}
+              countdownFont={countdownFont}
+            />
           ))}
         </div>
       ) : freeBlock ? (
-        <FreeBlock freeBlock={freeBlock} next={next} now={now} />
+        <FreeBlock freeBlock={freeBlock} next={next} now={now} countdownFont={countdownFont} />
       ) : null}
 
       {gapAfterCurrent && currentEnd ? (

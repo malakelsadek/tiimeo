@@ -1,11 +1,13 @@
 export type SoundOption = "none" | "chime" | "beep" | "bell";
 export type ThemeOption = "midnight" | "forest" | "plum";
+export type FontOption = "system" | "mono" | "serif" | "orbitron" | "vt323";
 
 export interface Settings {
   alertsEnabled: boolean;
   leadMinutes: number;
   sound: SoundOption;
   theme: ThemeOption;
+  font: FontOption;
 }
 
 export const LEAD_MINUTE_OPTIONS = [1, 5, 10, 15] as const;
@@ -20,12 +22,20 @@ export const THEME_OPTIONS: { value: ThemeOption; label: string }[] = [
   { value: "forest", label: "Forest" },
   { value: "plum", label: "Plum" },
 ];
+export const FONT_OPTIONS: { value: FontOption; label: string }[] = [
+  { value: "system", label: "System" },
+  { value: "mono", label: "Mono" },
+  { value: "serif", label: "Serif" },
+  { value: "orbitron", label: "Orbitron" },
+  { value: "vt323", label: "Terminal" },
+];
 
 export const DEFAULT_SETTINGS: Settings = {
   alertsEnabled: false,
   leadMinutes: 5,
   sound: "chime",
   theme: "midnight",
+  font: "system",
 };
 
 const STORAGE_KEY = "tiimeo.settings";
