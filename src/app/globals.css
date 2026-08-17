@@ -37,6 +37,24 @@
   --accent: #9085e9;
 }
 
+[data-theme="sunset"] {
+  --surface-0: #0a0503;
+  --surface-1: #170c05;
+  --accent: #d95926;
+}
+
+[data-theme="amber"] {
+  --surface-0: #0a0700;
+  --surface-1: #171200;
+  --accent: #c98500;
+}
+
+[data-theme="rose"] {
+  --surface-0: #0c0308;
+  --surface-1: #170611;
+  --accent: #d55181;
+}
+
 * {
   -webkit-tap-highlight-color: transparent;
 }

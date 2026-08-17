@@ -1,6 +1,14 @@
 export type SoundOption = "none" | "chime" | "beep" | "bell";
-export type ThemeOption = "midnight" | "forest" | "plum";
-export type FontOption = "system" | "mono" | "serif" | "orbitron" | "vt323";
+export type ThemeOption = "midnight" | "forest" | "plum" | "sunset" | "amber" | "rose";
+export type FontOption =
+  | "system"
+  | "mono"
+  | "serif"
+  | "orbitron"
+  | "vt323"
+  | "rajdhani"
+  | "spacemono"
+  | "bebasneue";
 
 export interface Settings {
   alertsEnabled: boolean;
@@ -21,6 +29,9 @@ export const THEME_OPTIONS: { value: ThemeOption; label: string }[] = [
   { value: "midnight", label: "Midnight" },
   { value: "forest", label: "Forest" },
   { value: "plum", label: "Plum" },
+  { value: "sunset", label: "Sunset" },
+  { value: "amber", label: "Amber" },
+  { value: "rose", label: "Rose" },
 ];
 export const FONT_OPTIONS: { value: FontOption; label: string }[] = [
   { value: "system", label: "System" },
@@ -28,6 +39,9 @@ export const FONT_OPTIONS: { value: FontOption; label: string }[] = [
   { value: "serif", label: "Serif" },
   { value: "orbitron", label: "Orbitron" },
   { value: "vt323", label: "Terminal" },
+  { value: "rajdhani", label: "Rajdhani" },
+  { value: "spacemono", label: "Space Mono" },
+  { value: "bebasneue", label: "Bebas Neue" },
 ];
 
 export const DEFAULT_SETTINGS: Settings = {

@@ -57,6 +57,40 @@ function CurrentBlock({
   );
 }
 
+// A smaller, nested countdown for an event that overlaps the primary one —
+// keeps concurrent events grouped into a single timer instead of stacking
+// several full-size blocks.
+function MiniCurrentBlock({
+  event,
+  now,
+  colorIndex,
+  countdownFont,
+}: {
+  event: StatusedEvent;
+  now: Date;
+  colorIndex: number;
+  countdownFont: string;
+}) {
+  const remaining = event.end.getTime() - now.getTime();
+  const color = seriesVar(colorIndex);
+  return (
+    <div className="flex items-baseline justify-between gap-3">
+      <span className="flex min-w-0 items-center gap-2">
+        <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: color }} />
+        <span className="truncate text-sm" style={{ color: "var(--text-secondary)" }}>
+          {event.title}
+        </span>
+      </span>
+      <span
+        className="shrink-0 text-sm font-medium"
+        style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
+      >
+        {formatCountdown(remaining)}
+      </span>
+    </div>
+  );
+}
+
 function FreeBlock({
   freeBlock,
   next,
@@ -127,8 +161,8 @@ function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
   const clamped = Math.max(0, Math.min(1, fraction));
   return (
     <div
-      className="mx-auto mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full"
-      style={{ background: "var(--surface-1)" }}
+      className="mx-auto mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full border"
+      style={{ background: "var(--surface-1)", borderColor: "#ffffff" }}
     >
       <div
         className="h-full rounded-full"
@@ -171,16 +205,29 @@ export default function CountdownScreen({ current, next, freeBlock, now, colorIn
   return (
     <div className="text-center">
       {current.length > 0 ? (
-        <div className="flex flex-col gap-8">
-          {current.map((e) => (
-            <CurrentBlock
-              key={e.id}
-              event={e}
-              now={now}
-              colorIndex={colorIndexFor(e.calendarId)}
-              countdownFont={countdownFont}
-            />
-          ))}
+        <div>
+          <CurrentBlock
+            event={current[0]}
+            now={now}
+            colorIndex={colorIndexFor(current[0].calendarId)}
+            countdownFont={countdownFont}
+          />
+          {current.length > 1 ? (
+            <div className="mx-auto mt-5 flex max-w-xs flex-col gap-2.5">
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Also now
+              </p>
+              {current.slice(1).map((e) => (
+                <MiniCurrentBlock
+                  key={e.id}
+                  event={e}
+                  now={now}
+                  colorIndex={colorIndexFor(e.calendarId)}
+                  countdownFont={countdownFont}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : freeBlock ? (
         <FreeBlock freeBlock={freeBlock} next={next} now={now} countdownFont={countdownFont} />
