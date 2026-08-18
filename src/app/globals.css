@@ -5,9 +5,18 @@
   --surface-0: #000000;
   --surface-1: #0d0d0d;
   --text-primary: #ffffff;
-  --text-secondary: #a3a3a0;
-  --text-muted: #6b6b68;
+  --text-secondary: color-mix(in srgb, var(--text-primary) 70%, var(--surface-0));
+  --text-muted: color-mix(in srgb, var(--text-primary) 45%, var(--surface-0));
   --accent: #3987e5;
+  /* Bar (progress fill) and clock (countdown digits) default to the theme's
+     accent/text but are their own variables so a theme — or a custom
+     palette — can set them independently. */
+  --bar-color: var(--accent);
+  --clock-color: var(--text-primary);
+  /* Text drawn on top of --accent/--bar-color (pill labels, buttons). Fixed
+     per preset theme since every preset accent is light enough for black
+     text; the custom theme computes this dynamically instead. */
+  --on-accent: #000000;
 
   --series-1: #3987e5;
   --series-2: #d95926;
@@ -22,9 +31,10 @@
   --status-good: #2ecc71;
 }
 
-/* Themes only shift the background tint and the chrome accent (icons,
-   toggles, selected pills) — calendar identity colors (--series-*) and
-   status colors stay fixed so event coloring never changes underneath you. */
+/* Presets shift the background tint plus the accent/bar/clock colors —
+   calendar identity colors (--series-*) and status colors stay fixed so
+   event coloring never changes underneath you. The "custom" theme sets
+   these same variables inline at runtime instead (see useTheme.ts). */
 [data-theme="forest"] {
   --surface-0: #030905;
   --surface-1: #081208;

@@ -12,8 +12,8 @@ export default function SignInScreen({ onSignIn, loading, error, configured }: P
     <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
       <div className="flex flex-col items-center gap-2">
         <div
-          className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl font-bold text-white"
-          style={{ background: "var(--accent)" }}
+          className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl font-bold"
+          style={{ background: "var(--accent)", color: "var(--on-accent)" }}
         >
           t
         </div>
@@ -34,8 +34,8 @@ export default function SignInScreen({ onSignIn, loading, error, configured }: P
         <button
           onClick={onSignIn}
           disabled={loading}
-          className="rounded-full px-6 py-3 text-sm font-medium text-white disabled:opacity-60"
-          style={{ background: "var(--accent)" }}
+          className="rounded-full px-6 py-3 text-sm font-medium disabled:opacity-60"
+          style={{ background: "var(--accent)", color: "var(--on-accent)" }}
         >
           {loading ? "Connecting…" : "Connect Google Calendar"}
         </button>

@@ -1,5 +1,6 @@
 export type SoundOption = "none" | "chime" | "beep" | "bell";
-export type ThemeOption = "midnight" | "forest" | "plum" | "sunset" | "amber" | "rose";
+export type ThemeOption = "midnight" | "forest" | "plum" | "sunset" | "amber" | "rose" | "custom";
+export type BarStyle = "solid" | "glow" | "minimal";
 export type FontOption =
   | "system"
   | "mono"
@@ -10,11 +11,20 @@ export type FontOption =
   | "spacemono"
   | "bebasneue";
 
+export interface CustomColors {
+  background: string;
+  text: string;
+  bar: string;
+  clock: string;
+}
+
 export interface Settings {
   alertsEnabled: boolean;
   leadMinutes: number;
   sound: SoundOption;
   theme: ThemeOption;
+  customColors: CustomColors;
+  barStyle: BarStyle;
   font: FontOption;
 }
 
@@ -32,6 +42,12 @@ export const THEME_OPTIONS: { value: ThemeOption; label: string }[] = [
   { value: "sunset", label: "Sunset" },
   { value: "amber", label: "Amber" },
   { value: "rose", label: "Rose" },
+  { value: "custom", label: "Custom" },
+];
+export const BAR_STYLE_OPTIONS: { value: BarStyle; label: string }[] = [
+  { value: "solid", label: "Solid" },
+  { value: "glow", label: "Glow" },
+  { value: "minimal", label: "Minimal" },
 ];
 export const FONT_OPTIONS: { value: FontOption; label: string }[] = [
   { value: "system", label: "System" },
@@ -44,11 +60,20 @@ export const FONT_OPTIONS: { value: FontOption; label: string }[] = [
   { value: "bebasneue", label: "Bebas Neue" },
 ];
 
+export const DEFAULT_CUSTOM_COLORS: CustomColors = {
+  background: "#000000",
+  text: "#ffffff",
+  bar: "#3987e5",
+  clock: "#ffffff",
+};
+
 export const DEFAULT_SETTINGS: Settings = {
   alertsEnabled: false,
   leadMinutes: 5,
   sound: "chime",
   theme: "midnight",
+  customColors: DEFAULT_CUSTOM_COLORS,
+  barStyle: "solid",
   font: "system",
 };
 

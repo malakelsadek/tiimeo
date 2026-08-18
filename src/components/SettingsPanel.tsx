@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import {
+  BAR_STYLE_OPTIONS,
   FONT_OPTIONS,
   LEAD_MINUTE_OPTIONS,
   SOUND_OPTIONS,
   THEME_OPTIONS,
+  type CustomColors,
   type Settings,
 } from "@/lib/settings";
 import { FONT_FAMILIES } from "@/lib/fonts";
@@ -37,7 +39,7 @@ function Pill({
       className="rounded-full px-4 py-2.5 text-sm font-medium transition-colors"
       style={{
         background: active ? "var(--accent)" : "var(--surface-1)",
-        color: active ? "#000000" : "var(--text-secondary)",
+        color: active ? "var(--on-accent)" : "var(--text-secondary)",
         fontFamily,
       }}
     >
@@ -57,8 +59,40 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   );
 }
 
+function ColorField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label
+      className="flex w-full items-center justify-between gap-3 rounded-xl px-4 py-2.5"
+      style={{ background: "var(--surface-1)" }}
+    >
+      <span className="text-sm" style={{ color: "var(--text-secondary)" }}>
+        {label}
+      </span>
+      <input
+        type="color"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        aria-label={label}
+        className="h-8 w-12 cursor-pointer rounded-md border-0 bg-transparent p-0"
+      />
+    </label>
+  );
+}
+
 export default function SettingsPanel({ settings, onChange, onClose, onSignOut }: Props) {
   const [permissionNote, setPermissionNote] = useState<string | null>(null);
+
+  const updateCustomColor = (key: keyof CustomColors, value: string) => {
+    onChange({ customColors: { ...settings.customColors, [key]: value } });
+  };
 
   const handleToggleAlerts = async () => {
     if (settings.alertsEnabled) {
@@ -137,6 +171,43 @@ export default function SettingsPanel({ settings, onChange, onClose, onSignOut }
           {THEME_OPTIONS.map((t) => (
             <Pill key={t.value} active={settings.theme === t.value} onClick={() => onChange({ theme: t.value })}>
               {t.label}
+            </Pill>
+          ))}
+        </div>
+      </Section>
+
+      {settings.theme === "custom" ? (
+        <Section label="Custom colors">
+          <div className="flex w-full max-w-[16rem] flex-col gap-2">
+            <ColorField
+              label="Background"
+              value={settings.customColors.background}
+              onChange={(v) => updateCustomColor("background", v)}
+            />
+            <ColorField
+              label="Text"
+              value={settings.customColors.text}
+              onChange={(v) => updateCustomColor("text", v)}
+            />
+            <ColorField
+              label="Bar"
+              value={settings.customColors.bar}
+              onChange={(v) => updateCustomColor("bar", v)}
+            />
+            <ColorField
+              label="Clock"
+              value={settings.customColors.clock}
+              onChange={(v) => updateCustomColor("clock", v)}
+            />
+          </div>
+        </Section>
+      ) : null}
+
+      <Section label="Bar style">
+        <div className="flex flex-wrap justify-center gap-2">
+          {BAR_STYLE_OPTIONS.map((b) => (
+            <Pill key={b.value} active={settings.barStyle === b.value} onClick={() => onChange({ barStyle: b.value })}>
+              {b.label}
             </Pill>
           ))}
         </div>

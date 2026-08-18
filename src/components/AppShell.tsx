@@ -25,7 +25,7 @@ export default function AppShell() {
   const { settings, update: updateSettings } = useSettings();
   const [showSettings, setShowSettings] = useState(false);
 
-  useTheme(settings.theme);
+  useTheme(settings);
 
   const colorIndexById = useMemo(() => {
     const map = new Map<string, number>();
@@ -108,6 +108,7 @@ export default function AppShell() {
           now={now}
           colorIndexFor={colorIndexFor}
           countdownFont={FONT_FAMILIES[settings.font]}
+          barStyle={settings.barStyle}
         />
       </main>
     </div>

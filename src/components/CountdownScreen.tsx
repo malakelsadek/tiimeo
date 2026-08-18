@@ -2,6 +2,7 @@
 
 import type { StatusedEvent } from "@/lib/types";
 import type { FreeBlock } from "@/lib/schedule";
+import type { BarStyle } from "@/lib/settings";
 import { formatClock, formatCountdown, formatDuration } from "@/lib/time";
 import { seriesVar } from "@/lib/palette";
 
@@ -12,6 +13,7 @@ interface Props {
   now: Date;
   colorIndexFor: (calendarId: string) => number;
   countdownFont: string;
+  barStyle: BarStyle;
 }
 
 // Back-to-back events (next starts right as the current one ends) don't
@@ -46,12 +48,12 @@ function CurrentBlock({
       </p>
       <p
         className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
-        style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
+        style={{ color: "var(--clock-color)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
       >
         {formatCountdown(remaining)}
       </p>
       <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-        left · until {formatClock(event.end)}
+        until {formatClock(event.end)}
       </p>
     </div>
   );
@@ -83,7 +85,7 @@ function MiniCurrentBlock({
       </span>
       <span
         className="shrink-0 text-sm font-medium"
-        style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
+        style={{ color: "var(--clock-color)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
       >
         {formatCountdown(remaining)}
       </span>
@@ -111,12 +113,12 @@ function FreeBlock({
         <>
           <p
             className={`mt-3 ${COUNTDOWN_TEXT_CLASS}`}
-            style={{ color: "var(--text-primary)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
+            style={{ color: "var(--clock-color)", fontVariantNumeric: "tabular-nums", fontFamily: countdownFont }}
           >
             {formatCountdown(freeBlock.end.getTime() - now.getTime())}
           </p>
           <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-            left · until {formatClock(freeBlock.end)}
+            until {formatClock(freeBlock.end)}
           </p>
         </>
       ) : (
@@ -157,22 +159,39 @@ function NextFreeLine({ startsAt, endsAt, now }: { startsAt: Date; endsAt: Date 
   );
 }
 
-function ProgressBar({ fraction, color }: { fraction: number; color: string }) {
+function ProgressBar({ fraction, style }: { fraction: number; style: BarStyle }) {
   const clamped = Math.max(0, Math.min(1, fraction));
+  const minimal = style === "minimal";
   return (
     <div
-      className="mx-auto mt-8 h-1.5 w-full max-w-xs overflow-hidden rounded-full border"
-      style={{ background: "var(--surface-1)", borderColor: "#ffffff" }}
+      className={`mx-auto mt-8 w-full max-w-xs overflow-hidden rounded-full ${minimal ? "h-1" : "h-1.5 border"}`}
+      style={{
+        background: minimal ? "transparent" : "var(--surface-1)",
+        borderColor: minimal ? undefined : "color-mix(in srgb, var(--text-primary) 25%, transparent)",
+      }}
     >
       <div
         className="h-full rounded-full"
-        style={{ width: `${clamped * 100}%`, background: color, transition: "width 1s linear" }}
+        style={{
+          width: `${clamped * 100}%`,
+          background: "var(--bar-color)",
+          boxShadow: style === "glow" ? "0 0 12px var(--bar-color)" : undefined,
+          transition: "width 1s linear",
+        }}
       />
     </div>
   );
 }
 
-export default function CountdownScreen({ current, next, freeBlock, now, colorIndexFor, countdownFont }: Props) {
+export default function CountdownScreen({
+  current,
+  next,
+  freeBlock,
+  now,
+  colorIndexFor,
+  countdownFont,
+  barStyle,
+}: Props) {
   if (current.length === 0 && !next) {
     return (
       <p className="text-lg" style={{ color: "var(--text-muted)" }}>
@@ -188,18 +207,17 @@ export default function CountdownScreen({ current, next, freeBlock, now, colorIn
     (!next || next.start.getTime() - currentEnd.getTime() > GAP_EPSILON_MS);
 
   // The bar always tracks whichever countdown is the primary one above,
-  // filling up (0 → 1) as elapsed time approaches the block's end.
+  // filling up (0 → 1) as elapsed time approaches the block's end. Its color
+  // is always the theme's bar color (not the event's category color) so it
+  // reads as one consistent UI element.
   let barFraction: number | null = null;
-  let barColor = "var(--text-primary)";
   if (current.length > 0) {
     const primary = current[0];
     const total = primary.end.getTime() - primary.start.getTime();
     barFraction = total > 0 ? (now.getTime() - primary.start.getTime()) / total : 0;
-    barColor = seriesVar(colorIndexFor(primary.calendarId));
   } else if (freeBlock && next) {
     const total = freeBlock.end.getTime() - freeBlock.start.getTime();
     barFraction = total > 0 ? (now.getTime() - freeBlock.start.getTime()) / total : 0;
-    barColor = "var(--status-good)";
   }
 
   return (
@@ -239,7 +257,7 @@ export default function CountdownScreen({ current, next, freeBlock, now, colorIn
         <NextLine event={next} now={now} colorIndex={colorIndexFor(next.calendarId)} />
       ) : null}
 
-      {barFraction !== null ? <ProgressBar fraction={barFraction} color={barColor} /> : null}
+      {barFraction !== null ? <ProgressBar fraction={barFraction} style={barStyle} /> : null}
     </div>
   );
 }
